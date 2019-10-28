@@ -1,0 +1,71 @@
+name:                file-dupes
+version:             0.1.0.0
+github:              "tbidne/file-dupes"
+license:             BSD3
+author:              "Thomas Bidne"
+maintainer:          "tbidne@gmail.com"
+copyright:           "2019 Thomas Bidne"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/file-dupes#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- bytestring
+- containers
+- filemanip
+- SHA
+- text
+
+ghc-options:
+  - -O2
+  - -Wall
+  - -Wcompat
+  - -Wredundant-constraints
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+
+default-extensions:
+  - OverloadedStrings
+  - ScopedTypeVariables
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - containers
+  - filemanip
+  - SHA
+  - text
+
+executables:
+  file-dupes-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - file-dupes
+
+tests:
+  file-dupes-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - file-dupes
