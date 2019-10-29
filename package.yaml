@@ -29,6 +29,7 @@ dependencies:
 
 ghc-options:
   - -O2
+  #- -threaded
   - -Wall
   - -Wcompat
   - -Wredundant-constraints

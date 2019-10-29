@@ -3,7 +3,7 @@
 
 module Types
 ( FileSnip(..)
-, DupMap(..)
+, DupMap
 , DupSearch(..)
 , Hash(..)
 , showMap
@@ -22,8 +22,11 @@ type DupMap a = Map a [Text]
 showMap :: DupMap a -> Text
 showMap mp = M.foldrWithKey f T.empty mp
   where f _ names acc
-          | L.length names > 1 = (T.intercalate ", " names) `T.append` "\n\n" `T.append` acc
-          | otherwise = acc
+          | L.length names > 1   = showNames names acc
+          | otherwise            = acc
+
+showNames :: [Text] -> Text -> Text
+showNames names acc = (T.intercalate ", " names) `T.append` "\n\n" `T.append` acc
 
 newtype FileSnip a = FileSnip { unSnip :: (Text, ByteString) }
   deriving Show
@@ -31,7 +34,7 @@ newtype FileSnip a = FileSnip { unSnip :: (Text, ByteString) }
 class Ord a => Hash a where
   hash :: FileSnip a -> a
 
-class (Hash a, Show a, Monad m) => DupSearch m a where
+class Monad m => DupSearch m a where
   scan :: Text -> m [FileSnip a]
 
   mapify :: [FileSnip a] -> m (DupMap a)
