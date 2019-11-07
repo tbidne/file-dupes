@@ -6,8 +6,6 @@ module Common
 
 import System.FilePath.Find
 
-import Types
-
 onlyFiles :: FilterPredicate
 onlyFiles = fileType ==? RegularFile
 

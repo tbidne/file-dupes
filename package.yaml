@@ -29,7 +29,7 @@ dependencies:
 
 ghc-options:
   - -O2
-  #- -threaded
+  - -threaded
   - -Wall
   - -Wcompat
   - -Wredundant-constraints
@@ -38,16 +38,9 @@ ghc-options:
 
 default-extensions:
   - OverloadedStrings
-  - ScopedTypeVariables
 
 library:
   source-dirs: src
-  dependencies:
-  - bytestring
-  - containers
-  - filemanip
-  - SHA
-  - text
 
 executables:
   file-dupes-exe:
