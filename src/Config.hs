@@ -4,7 +4,7 @@ module Config
 , unNat
 , Nat) where
 
-import           Data.Text (Text)
+import Data.Text (Text)
 
 newtype Nat = Nat { unNat :: Int }
 

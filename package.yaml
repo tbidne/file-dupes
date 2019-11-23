@@ -24,6 +24,7 @@ dependencies:
 - bytestring
 - containers
 - filemanip
+- mtl
 - SHA
 - text
 
