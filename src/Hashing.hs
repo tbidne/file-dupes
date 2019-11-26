@@ -1,34 +1,56 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE InstanceSigs #-}
 
 module Hashing
 ( Hash(..)
+, DupMap(..)
 , SHA1
 , addSnipToMap
+, showMap
 ) where
 
-import Data.Digest.Pure.SHA
-import Data.Map.Strict
-import Prelude hiding (lookup)
+import           Data.Digest.Pure.SHA
+import           Data.Map.Strict
+import           Data.Text (Text)
+import qualified Data.Text as T
+import           Prelude hiding (lookup)
 
-import DupMap
 import FileSnip
 
 type SHA1 = Digest SHA1State
 
 class Ord a => Hash a where
-  hash :: FileSnip a -> a
+  hash :: FileSnip -> a
 
 instance Hash SHA1 where
-  hash :: FileSnip SHA1 -> SHA1
+  hash :: FileSnip -> SHA1
   hash fs =
     let (_, bs) = unSnip fs
     in sha1 bs
 
-addSnipToMap :: Hash a => FileSnip a -> DupMap a -> DupMap a
-addSnipToMap fs mp =
+data DupMap where
+  SHA1Map :: Map SHA1 [Text] -> DupMap
+
+addSnipToMap :: FileSnip -> DupMap -> DupMap
+addSnipToMap fs (SHA1Map mp) = SHA1Map $ insMap fs mp
+
+insMap :: Hash a => FileSnip -> Map a [Text] -> Map a [Text]
+insMap fs mp =
   let (p, _) = unSnip fs
       digest = hash fs
   in case lookup digest mp of
     Nothing    -> insert digest [p] mp
     Just files -> insert digest (p : files) mp
+
+showMap :: DupMap -> Text
+showMap (SHA1Map mp) = showRaw mp
+
+showRaw :: (Map a [Text]) -> Text
+showRaw mp = foldrWithKey f T.empty mp
+  where f _ names acc = case names of
+          [] -> acc
+          xs -> showNames xs acc
+
+showNames :: [Text] -> Text -> Text
+showNames names acc = (T.intercalate ", " names) <> "\n\n" <> acc

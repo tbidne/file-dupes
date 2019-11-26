@@ -7,7 +7,6 @@ import System.Environment
 
 import Config
 import Hashing
-import DupMap
 import DupScanner
 import VanillaIO
 
@@ -36,5 +35,5 @@ parseEnv p sz =
 
 vanilla :: Env -> IO ()
 vanilla = runVanilla . (display <=< runReaderT f)
-  where f :: ReaderT Env VanillaIO (DupMap SHA1)
+  where f :: ReaderT Env VanillaIO DupMap
         f = entry
