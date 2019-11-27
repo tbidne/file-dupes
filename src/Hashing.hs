@@ -25,9 +25,7 @@ class Ord a => Hash a where
 
 instance Hash SHA1 where
   hash :: FileSnip -> SHA1
-  hash fs =
-    let (_, bs) = unSnip fs
-    in sha1 bs
+  hash = sha1 . snd . unSnip
 
 data DupMap where
   SHA1Map :: Map SHA1 [Text] -> DupMap
@@ -47,7 +45,7 @@ showMap :: DupMap -> Text
 showMap (SHA1Map mp) = showRaw mp
 
 showRaw :: (Map a [Text]) -> Text
-showRaw mp = foldrWithKey f T.empty mp
+showRaw mp = foldrWithKey f "" mp
   where f _ names acc = case names of
           [] -> acc
           xs -> showNames xs acc

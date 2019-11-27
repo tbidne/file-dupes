@@ -1,5 +1,6 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module VanillaIO (VanillaIO(..)) where
 
@@ -19,9 +20,9 @@ newtype VanillaIO a = VanillaIO { runVanilla :: IO a }
 
 instance DupScanner VanillaIO where
   scan :: Env -> VanillaIO [FileSnip]
-  scan env = VanillaIO $ do
-    files <- searchPath $ T.unpack $ path env
-    sequenceA $ fmap (readSnip (snipSz env)) files
+  scan Env{..} = VanillaIO $ do
+    files <- searchPath $ T.unpack path
+    sequenceA $ fmap (readSnip snipSz) files
 
   mapify :: [FileSnip] -> VanillaIO DupMap
   mapify = VanillaIO . return . foldr addSnipToMap (SHA1Map Map.empty)

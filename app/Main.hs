@@ -3,10 +3,9 @@ module Main where
 import Control.Monad
 import Control.Monad.Reader
 import Data.Text
-import System.Environment  
+import System.Environment
 
 import Config
-import Hashing
 import DupScanner
 import VanillaIO
 
@@ -34,6 +33,4 @@ parseEnv p sz =
     Nothing -> Nothing
 
 vanilla :: Env -> IO ()
-vanilla = runVanilla . (display <=< runReaderT f)
-  where f :: ReaderT Env VanillaIO DupMap
-        f = entry
+vanilla = runVanilla . (display <=< runReaderT entry)

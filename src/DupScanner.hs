@@ -6,7 +6,7 @@ module DupScanner
 ( DupScanner(..)
 , entry) where
 
-import           Control.Monad.Reader
+import Control.Monad.Reader
 
 import Config
 import FileSnip
