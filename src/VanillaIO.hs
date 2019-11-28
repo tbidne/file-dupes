@@ -1,5 +1,5 @@
-{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module VanillaIO (VanillaIO(..)) where

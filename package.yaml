@@ -20,18 +20,21 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/file-dupes#readme>
 
 dependencies:
-- base >= 4.7 && < 5
-- bytestring
-- containers
-- filemanip
-- mtl
-- SHA
-- text
+  - base >= 4.7 && < 5
+  - bytestring
+  - containers
+  - filemanip
+  - mtl
+  - SHA
+  - text
 
 ghc-options:
   - -O2
-  - -threaded
   - -Wall
+  - -Wpartial-fields
+  - -Wmissing-home-modules
+  - -Widentities
+  - -Wmissing-export-lists
   - -Wcompat
   - -Wredundant-constraints
   - -Wincomplete-record-updates
@@ -48,19 +51,27 @@ executables:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - file-dupes
+      - file-dupes
 
 tests:
-  file-dupes-test:
-    main:                Spec.hs
-    source-dirs:         test
+  spec:
+    main: Spec.hs
+    source-dirs: test/spec
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -Wno-orphans
+      - -Wno-missing-export-lists
     dependencies:
-    - file-dupes
+      - file-dupes
+      - hspec
+      - hspec-core
+      - QuickCheck
+  inttest:
+    main: Spec.hs
+    source-dirs: test/inttest
+    dependencies:
+      - file-dupes
+      - hspec

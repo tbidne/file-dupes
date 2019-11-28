@@ -7,6 +7,7 @@ module Hashing
 , DupMap(..)
 , SHA1
 , addSnipToMap
+, memberSnip
 , showMap
 ) where
 
@@ -30,8 +31,16 @@ instance Hash SHA1 where
 data DupMap where
   SHA1Map :: Map SHA1 [Text] -> DupMap
 
+instance Show DupMap where
+  show = T.unpack . showMap
+
 addSnipToMap :: FileSnip -> DupMap -> DupMap
 addSnipToMap fs (SHA1Map mp) = SHA1Map $ insMap fs mp
+
+memberSnip :: FileSnip -> DupMap -> Bool
+memberSnip fs (SHA1Map mp) =
+  let digest = hash fs
+  in member digest mp
 
 insMap :: Hash a => FileSnip -> Map a [Text] -> Map a [Text]
 insMap fs mp =
@@ -44,11 +53,11 @@ insMap fs mp =
 showMap :: DupMap -> Text
 showMap (SHA1Map mp) = showRaw mp
 
-showRaw :: (Map a [Text]) -> Text
+showRaw :: Show a => (Map a [Text]) -> Text
 showRaw mp = foldrWithKey f "" mp
-  where f _ names acc = case names of
+  where f k names acc = case names of
           [] -> acc
-          xs -> showNames xs acc
+          xs -> "Key: " <> (T.pack . show) k <> "\n" <> showNames xs acc
 
 showNames :: [Text] -> Text -> Text
-showNames names acc = (T.intercalate ", " names) <> "\n\n" <> acc
+showNames names acc = (T.intercalate "\n" names) <> "\n\n" <> acc
