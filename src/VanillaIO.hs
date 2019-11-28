@@ -22,7 +22,7 @@ instance DupScanner VanillaIO where
   scan :: Env -> VanillaIO [FileSnip]
   scan Env{..} = VanillaIO $ do
     files <- searchPath $ T.unpack path
-    sequenceA $ fmap (readSnip snipSz) files
+    traverse (readSnip snipSz) files
 
   mapify :: [FileSnip] -> VanillaIO DupMap
   mapify = VanillaIO . return . foldr addSnipToMap (SHA1Map Map.empty)
@@ -30,7 +30,7 @@ instance DupScanner VanillaIO where
   display :: DupMap -> VanillaIO ()
   display = VanillaIO . putStrLn . T.unpack . showMap
 
-readSnip :: Nat -> FilePath -> IO (FileSnip)
+readSnip :: Nat -> FilePath -> IO FileSnip
 readSnip n p = withFile p ReadMode $ \h -> do
   sp <- hGetNonBlocking h (unNat n)
   return $ FileSnip (T.pack p, sp)
