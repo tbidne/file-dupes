@@ -1,4 +1,4 @@
-module FileSnip where
+module FileSnip (FileSnip(..)) where
 
 import Data.ByteString.Lazy (ByteString)
 import Data.Text (Text)
