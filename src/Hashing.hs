@@ -54,7 +54,7 @@ showMap :: DupMap -> Text
 showMap (SHA1Map mp) = showRaw mp
 
 showRaw :: Show a => (Map a [Text]) -> Text
-showRaw mp = foldrWithKey f "" mp
+showRaw = foldrWithKey f ""
   where f k names acc = case names of
           [] -> acc
           xs -> "Key: " <> (T.pack . show) k <> "\n" <> showNames xs acc

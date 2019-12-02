@@ -25,6 +25,7 @@ dependencies:
   - containers
   - filemanip
   - mtl
+  - parallel
   - SHA
   - text
 

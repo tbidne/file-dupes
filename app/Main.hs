@@ -7,13 +7,14 @@ import System.Environment
 
 import Config
 import DupScanner
+import ParallelIO
 import VanillaIO
 
 main :: IO ()
 main = do
   args <- getArgs
   case parseArgs args of
-    Nothing       -> putStrLn "Usage: stack exec file-dupes-exe <path> <snip-size> <v|c|p>"
+    Nothing       -> putStrLn "Usage: stack exec file-dupes-exe <path> <snip-size> <v|p>"
     Just (f, env) -> f env
 
 parseArgs :: [String] -> Maybe ((Env -> IO ()), Env)
@@ -24,6 +25,7 @@ parseArgs _          = Nothing
 
 parseSearchType :: String -> Maybe (Env -> IO ())
 parseSearchType "v" = Just vanilla
+parseSearchType "p" = Just parallel
 parseSearchType _   = Nothing
 
 parseEnv :: String -> Int -> Maybe Env
@@ -34,3 +36,6 @@ parseEnv p sz =
 
 vanilla :: Env -> IO ()
 vanilla = runVanilla . (display <=< runReaderT entry)
+
+parallel :: Env -> IO ()
+parallel = runParallel . (display <=< runReaderT entry)

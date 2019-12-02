@@ -4,12 +4,10 @@
 
 module VanillaIO (VanillaIO(..)) where
 
-import           Data.ByteString.Lazy hiding (foldr, putStrLn)
 import           Data.Map.Strict as Map hiding (foldr)
 import qualified Data.Text as T
-import           System.IO
 
-import Common
+import CommonIO
 import Config
 import Hashing
 import DupScanner
@@ -20,17 +18,10 @@ newtype VanillaIO a = VanillaIO { runVanilla :: IO a }
 
 instance DupScanner VanillaIO where
   scan :: Env -> VanillaIO [FileSnip]
-  scan Env{..} = VanillaIO $ do
-    files <- searchPath $ T.unpack path
-    traverse (readSnip snipSz) files
+  scan Env{..} = VanillaIO $ scanIO path snipSz
 
   mapify :: [FileSnip] -> VanillaIO DupMap
   mapify = VanillaIO . return . foldr addSnipToMap (SHA1Map Map.empty)
 
   display :: DupMap -> VanillaIO ()
   display = VanillaIO . putStrLn . T.unpack . showMap
-
-readSnip :: Nat -> FilePath -> IO FileSnip
-readSnip n p = withFile p ReadMode $ \h -> do
-  sp <- hGetNonBlocking h (unNat n)
-  return $ FileSnip (T.pack p, sp)
